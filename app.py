@@ -1,21 +1,26 @@
-from flask import Flask 
-import connexion
+"""
+Main module of the server file
+"""
 
-#create flask application
-#app = Flask(__name__)
+# 3rd party moudles
+from flask import render_template
 
-# Create the application instance
-app = connexion.App(__name__, specification_dir='./')
+# local modules
+import config
 
-#add swagger yaml from connexion module
-app.add_api('swagger.yml')
-#home route
-@app.route('/')
+
+# Get the application instance
+app = config.connex_app
+
+# Read the swagger.yml file to configure the endpoints
+app.add_api("swagger.yml")
+
+
+# create a URL route in our application for "/"
+@app.route("/")
 def home():
-    #print("This is just home page")
-    return 
+    return None
 
-#running flask in standalone mode
-if __name__ == '__main__':
-    #app.run(host='127.0.0.1', port=8080, debug=True)
-    application = app.app
+
+if __name__ == "__main__":
+    app.run(debug=True)
