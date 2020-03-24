@@ -100,9 +100,6 @@ def update(person_id, person):
     # Try to find an existing person with the same name as the update
     fname = person.get("fname")
     lname = person.get("lname")
-    cell = person.get("cell")
-    location = person.get("location")
-    email = person.get("email")
 
     existing_person = (
         Person.query.filter(Person.fname == fname)
@@ -133,7 +130,7 @@ def update(person_id, person):
 
         # turn the passed in person into a db object
         schema = PersonSchema()
-        update = schema.load(person, session=db.session).data
+        update = schema.load(person, session=db.session)
 
         # Set the id to the person we want to update
         update.person_id = update_person.person_id
