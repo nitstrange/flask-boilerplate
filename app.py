@@ -19,7 +19,7 @@ app.add_api("swagger.yml")
 # create a URL route in our application for "/"
 @app.route("/")
 def home():
-    return None
+    return render_template("home.html"), 200
 
 
 if __name__ == "__main__":

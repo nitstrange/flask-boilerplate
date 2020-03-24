@@ -1,6 +1,7 @@
 from flask import (
     make_response,
     abort,
+    render_template
 )
 from config import db
 from model.Person import (
