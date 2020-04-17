@@ -8,7 +8,11 @@ from model.Person import (
     Person,
     PersonSchema,
 )
-
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
+@jwt_required
 def read_all():
     """
     This function responds to a request for /api/people
@@ -22,7 +26,7 @@ def read_all():
     # Serialize the data for the response
     person_schema = PersonSchema(many=True)
     return person_schema.dump(people)
-
+@jwt_required
 def create(person):
     """
     This function creates a new person in the people structure
@@ -33,10 +37,8 @@ def create(person):
     """
     fname = person.get('fname')
     lname = person.get('lname')
-    cell = person.get('cell')
-    occupation = person.get('occupation')
-    email = person.get('email')
-
+    user = get_jwt_identity()
+    
 
     existing_person = Person.query \
         .filter(Person.fname == fname) \
@@ -48,6 +50,7 @@ def create(person):
         # Create a person instance using the schema and the passed-in person
         schema = PersonSchema()
         new_person = schema.load(person, session=db.session)
+        new_person.user_id = user["id"]
 
         # Add the person to the database
         db.session.add(new_person)
@@ -59,7 +62,7 @@ def create(person):
     # Otherwise, nope, person exists already
     else:
         abort(409, f'Person {fname} {lname} exists already')
-
+@jwt_required
 def read_one(person_id):
     """
     This function responds to a request for /api/people/{person_id}
@@ -83,7 +86,7 @@ def read_one(person_id):
     # Otherwise, nope, didn't find that person
     else:
         abort(404, 'Person not found for Id: {person_id}'.format(person_id=person_id))
-
+@jwt_required
 def update(person_id, person):
     """
     This function updates an existing person in the people structure
@@ -145,7 +148,7 @@ def update(person_id, person):
 
         return data, 200
 
-
+@jwt_required
 def delete(person_id):
     """
     This function deletes a person from the people structure

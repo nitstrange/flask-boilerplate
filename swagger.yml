@@ -2,16 +2,105 @@ swagger: "2.0"
 info:
   description: This is the swagger file that goes with our server code
   version: "1.0.0"
-  title: BO Flask
+  title: Beautiful Occupation API 
 consumes:
   - application/json
 produces:
   - application/json
 
-basePath: /api
+basePath: /api/v1/
 
 # Paths supported by the server application
 paths:
+  /log-in:
+    post:
+      operationId: controller.auth.login
+      tags:
+        - Auth
+      summary: User login api 
+      description: User login method to get json web token
+      parameters:
+        - name: login
+          in: body
+          required: True
+          schema :
+            type : object
+            items:
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+           description: Successfully logged in !!!
+           schema:
+            properties:
+              access_token:
+                type: string
+  /sign-up:
+    post:
+      operationId: controller.auth.signup
+      tags : 
+        - Auth
+      summary :  User sign up 
+      description: User sign up process  
+      parameters:
+        - name : login
+          in : body
+          required : True
+          schema:
+            type : object
+            items:
+              properties:
+                username:
+                  type : string       
+                password:
+                  type : string
+      responses:
+        200:
+          description: response
+          schema:
+            type: object
+            properties:
+              data : 
+                type : string
+
+
+  /current_user:
+    post:
+      operationId: controller.auth.get_user
+      tags: 
+        - Auth
+      summary: Get current user info from json web token
+      parameters:
+        - name : access_token
+          in : body
+          required : True
+          schema :
+            type : object
+            properties:
+              jwt : 
+                type: string
+      responses:
+        200:
+          description : Successfully returned the json web token
+          schema :
+            type : object
+            properties:
+                fname:
+                  type: string
+                lname:
+                  type: string
+                occupation:
+                  type: string
+                location:
+                  type: string
+                cell:
+                  type: string
+                timestamp:
+                  type: string
+
   /people:
     get:
       operationId: controller.people.read_all
@@ -37,6 +126,8 @@ paths:
             type: array
             items:
               properties:
+                user_id:
+                  type: integer
                 fname:
                   type: string
                 lname:
